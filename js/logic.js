@@ -114,7 +114,157 @@
     return MONTHS[month0] + ' de ' + year;
   }
 
+  /* ---------- Courses and activities ---------- */
+
+  function allItems(course) {
+    var out = [];
+    course.sections.forEach(function (s) {
+      s.items.forEach(function (item) { out.push({ item: item, section: s, subsection: null }); });
+      (s.subsections || []).forEach(function (sub) {
+        sub.items.forEach(function (item) { out.push({ item: item, section: s, subsection: sub }); });
+      });
+    });
+    return out;
+  }
+
+  function activityStatus(item, nowIso) {
+    if (!item || !item.graded) return null;
+    if (item.submitted) return 'entregue';
+    if (item.opens && item.opens > nowIso) return 'nao-aberta';
+    if (item.due && item.due < nowIso) return 'atrasada';
+    return 'pendente';
+  }
+
+  function courseSummary(course, nowIso) {
+    var gradedItems = allItems(course).map(function (x) { return x.item; }).filter(function (i) { return i.graded; });
+    var submitted = gradedItems.filter(function (i) { return i.submitted; });
+    var pending = gradedItems
+      .filter(function (i) { return !i.submitted && i.due && i.due >= nowIso; })
+      .sort(function (a, b) { return a.due < b.due ? -1 : a.due > b.due ? 1 : 0; });
+    var withGrade = gradedItems.filter(function (i) { return typeof i.grade === 'number'; });
+    var wSum = withGrade.reduce(function (s, i) { return s + (i.weight || 1); }, 0);
+    var avg = wSum ? withGrade.reduce(function (s, i) { return s + i.grade * (i.weight || 1); }, 0) / wSum : null;
+    return {
+      graded: gradedItems.length,
+      submitted: submitted.length,
+      progress: gradedItems.length ? Math.round((submitted.length / gradedItems.length) * 100) : 0,
+      nextDue: pending[0] || null,
+      average: avg === null ? null : Math.round(avg * 10) / 10,
+    };
+  }
+
+  function byDue(a, b) { return a.item.due < b.item.due ? -1 : a.item.due > b.item.due ? 1 : 0; }
+
+  /* Graded, not-submitted activities. `days`: due between now and the end of day now+days.
+     `lateOnly`: only overdue ones. Default: everything pending from now on. */
+  function upcoming(courses, nowIso, opts) {
+    opts = opts || {};
+    var limit = null;
+    if (opts.days) {
+      var d = parseDate(nowIso);
+      d.setDate(d.getDate() + opts.days);
+      limit = toKey(d) + 'T23:59';
+    }
+    var out = [];
+    courses.forEach(function (c) {
+      allItems(c).forEach(function (x) {
+        var st = activityStatus(x.item, nowIso);
+        if (!st || st === 'entregue' || !x.item.due) return;
+        if (opts.lateOnly) { if (st === 'atrasada') out.push({ course: c, item: x.item, status: st }); return; }
+        if (st === 'atrasada') return;
+        if (limit && x.item.due > limit) return;
+        out.push({ course: c, item: x.item, status: st });
+      });
+    });
+    return out.sort(byDue);
+  }
+
+  function filterCourses(courses, f, ctx) {
+    var q = norm(f.q);
+    var favs = (ctx && ctx.favs) || [];
+    var now = (ctx && ctx.now) || '';
+    var items = courses.filter(function (c) {
+      if (q && norm(c.name + ' ' + c.shortName + ' ' + c.area + ' ' + c.teacher.name).indexOf(q) < 0) return false;
+      if (f.status && f.status !== 'todos' && c.status !== f.status) return false;
+      if (f.area && f.area !== 'todas' && c.area !== f.area) return false;
+      if (f.fav && favs.indexOf(c.id) < 0) return false;
+      return true;
+    });
+    var sum = {};
+    items.forEach(function (c) { sum[c.id] = courseSummary(c, now); });
+    var byName = function (a, b) { return a.name.localeCompare(b.name, 'pt-BR'); };
+    var cmp = {
+      nome: byName,
+      entrega: function (a, b) {
+        var da = sum[a.id].nextDue ? sum[a.id].nextDue.due : '9999';
+        var db = sum[b.id].nextDue ? sum[b.id].nextDue.due : '9999';
+        return da < db ? -1 : da > db ? 1 : byName(a, b);
+      },
+      progresso: function (a, b) { return sum[b.id].progress - sum[a.id].progress || byName(a, b); },
+      recente: function (a, b) { return a.lastAccess < b.lastAccess ? 1 : a.lastAccess > b.lastAccess ? -1 : byName(a, b); },
+    }[f.ordem] || byName;
+    return items.sort(cmp);
+  }
+
+  function activeFilterCount(f) {
+    var n = 0;
+    if (norm(f.q)) n++;
+    if (f.status && f.status !== 'andamento') n++;
+    if (f.area && f.area !== 'todas') n++;
+    if (f.fav) n++;
+    return n;
+  }
+
+  function currentSection(course, nowIso) {
+    var day = nowIso.slice(0, 10);
+    for (var i = 0; i < course.sections.length; i++) {
+      var s = course.sections[i];
+      if (s.start && s.end && s.start <= day && s.end >= day) return s;
+    }
+    return null;
+  }
+
+  function courseEvents(course) {
+    var out = [];
+    allItems(course).forEach(function (x) {
+      if (!x.item.due) return;
+      out.push({ date: x.item.due.slice(0, 10), time: x.item.due.slice(11, 16), title: x.item.title, courseId: course.id, itemId: x.item.id, item: x.item });
+    });
+    (course.events || []).forEach(function (e) {
+      out.push({ date: e.date, time: e.time || '', title: e.title, courseId: course.id });
+    });
+    return out.sort(function (a, b) { var ka = a.date + a.time, kb = b.date + b.time; return ka < kb ? -1 : ka > kb ? 1 : 0; });
+  }
+
+  /* ---------- Calendar ---------- */
+
+  /* Day keys for a month grid, Monday first, padded to whole weeks. */
+  function monthMatrix(year, month0) {
+    var first = new Date(year, month0, 1);
+    var offset = (first.getDay() + 6) % 7;
+    var days = new Date(year, month0 + 1, 0).getDate();
+    var cells = Math.ceil((offset + days) / 7) * 7;
+    var out = [];
+    for (var i = 0; i < cells; i++) out.push(toKey(new Date(year, month0, 1 - offset + i)));
+    return out;
+  }
+
+  function addMonths(year, month0, delta) {
+    var d = new Date(year, month0 + delta, 1);
+    return { year: d.getFullYear(), month0: d.getMonth() };
+  }
+
   App.logic = {
+    allItems: allItems,
+    activityStatus: activityStatus,
+    courseSummary: courseSummary,
+    upcoming: upcoming,
+    filterCourses: filterCourses,
+    activeFilterCount: activeFilterCount,
+    currentSection: currentSection,
+    courseEvents: courseEvents,
+    monthMatrix: monthMatrix,
+    addMonths: addMonths,
     WEEKDAYS: WEEKDAYS,
     WEEKDAYS_SHORT: WEEKDAYS_SHORT,
     MONTHS: MONTHS,
