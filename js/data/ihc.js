@@ -165,7 +165,7 @@
               it('pptx', 'Aspectos cognitivos, ergonômicos e sociais'),
               it('pdf', 'Aspectos cognitivos, ergonômicos e sociais'),
               it('link', 'Diagnóstico Semiótico: Rede de Combate à Violência Doméstica', {
-                ref: 'Almeida, A., Boaventura, I., Dias, K., Melo, A., & Jelinek, R. D. (2026). Diagnóstico Semiótico: Rede de Combate à Violência Doméstica. UNIPAMPA. https://doi.org/10.5281/zenodo.22019530',
+                ref: 'Exemplo de diagnóstico semiótico produzido na UNIPAMPA (2026).',
               }),
               graded('questionario', 'Questionário', { due: '2026-09-13T23:59', submitted: true, grade: 8, weight: 4, feedback: '8 de 10 questões corretas.' }),
             ],

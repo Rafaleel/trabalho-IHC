@@ -71,7 +71,7 @@ test('IHC fiel à referência', () => {
 test('sem dados reais de terceiros nem e-mails', () => {
   for (const f of glob('js/**/*.js')) {
     const src = read(f);
-    for (const s of ['amandamelo', 'docs.google.com', 'Valdir']) assert.ok(!src.includes(s), `${s} em ${f}`);
+    for (const s of ['amandamelo', 'docs.google.com', 'Valdir', 'Jelinek', 'Boaventura', 'zenodo.22019530']) assert.ok(!src.includes(s), `${s} em ${f}`);
     assert.ok(!/[\w.-]+@[\w-]+\.[\w.]+/.test(src), `e-mail em ${f}`);
   }
 });
