@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Protótipo Moodle — Mockups V4</title>
+<style>
+:root{
+  --bg:#f4f7f6; --paper:#ffffff; --ink:#1d2d35; --muted:#61717b; --line:#dbe4e1;
+  --green:#0b6b4b; --green-2:#0f8a5f; --soft:#eaf6ef; --blue:#2f6fed; --orange:#e68b2e;
+  --radius:14px; --shadow:0 10px 28px rgba(20,45,35,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #93d5b7;outline-offset:2px}
+.app{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:21px;color:#123d2e;letter-spacing:-.03em}
+.brand small{display:block;font-size:10px;color:#557166;font-weight:600;letter-spacing:0}
+.mark{font-size:26px;color:var(--green)}
+.nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nav button{border:0;background:transparent;color:#66757f;font-weight:700;padding:12px 12px;border-bottom:3px solid transparent}
+.nav button.active{color:var(--green);border-color:var(--green)}
+.user{display:flex;align-items:center;gap:10px;color:#66757f;font-weight:700}
+.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#e6f2eb;color:var(--green)}
+.banner{padding:10px 22px;border-bottom:1px solid #cfe3d8;background:#e8f6ed;color:#1d583f;font-size:12px;font-weight:700;text-align:center}
+.main{max-width:1180px;margin:0 auto;padding:30px 22px 46px}
+.eyebrow{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--green);margin:0 0 8px}
+h1,h2,h3,h4{margin:0;color:#1b2d36;line-height:1.2}
+h1{font-size:clamp(28px,4vw,36px);letter-spacing:-.04em}
+h2{font-size:20px}
+h3{font-size:16px}
+p{margin:0;color:var(--muted)}
+.lead{margin-top:8px;max-width:65ch}
+.panel,.card,.widget,.section,.sidebox,.calbox{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0 24px}
+.stat{padding:16px;display:flex;gap:12px;align-items:center}
+.stat-icon{width:42px;height:42px;border-radius:12px;background:var(--soft);color:var(--green);display:grid;place-items:center;font-size:20px;flex:none}
+.stat strong{display:block;font-size:24px;color:var(--ink)}
+.stat small{color:var(--muted);font-size:11px}
+.filterbox{padding:18px;margin-bottom:20px}
+.filter-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.filter-head p{font-size:12px}
+.btn{border:1px solid var(--line);background:#fff;color:#265340;border-radius:10px;padding:9px 14px;min-height:40px;font-weight:800}
+.btn:hover{background:#f2fbf6;border-color:#93c8aa}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.btn.ghost{background:transparent}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.chip{border:1px solid var(--line);background:#fff;color:#4d6358;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}
+.chip.active{background:var(--soft);color:#0a5b3e;border-color:#8fc4a4}
+.filter-grid{display:grid;grid-template-columns:minmax(220px,1.8fr) repeat(4,minmax(120px,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+label{font-size:11px;font-weight:800;color:#445963}
+.control{height:42px;width:100%;border:1px solid #ccd7d3;border-radius:10px;padding:0 12px;background:#fff;color:#223943;min-width:0}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar .muted{font-size:12px}
+.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.cover{height:110px;padding:14px;color:#fff;display:flex;align-items:flex-end;font-size:12px;font-weight:900;position:relative;overflow:hidden}
+.cover:after{content:"";position:absolute;right:-10px;top:-45px;width:160px;height:160px;border-radius:50%;border:16px solid rgba(255,255,255,.16);box-shadow:0 0 0 22px rgba(255,255,255,.09),0 0 0 48px rgba(255,255,255,.06)}
+.cover span{position:relative;z-index:1}
+.c1{background:linear-gradient(135deg,#5a63d8,#8ea1ff)}
+.c2{background:linear-gradient(135deg,#10a37f,#45c9a5)}
+.c3{background:linear-gradient(135deg,#6b7682,#9eb0bd)}
+.c4{background:linear-gradient(135deg,#d47135,#f0af5a)}
+.c5{background:linear-gradient(135deg,#b44f8c,#e28dba)}
+.cb{padding:16px;display:flex;flex-direction:column;gap:12px;min-height:220px}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.badge{display:inline-flex;padding:6px 10px;background:var(--soft);color:#0a6342;font-size:10px;font-weight:900;border-radius:999px}
+.badge.off{background:#eef2f3;color:#5d6d74}
+.star{border:1px solid var(--line);width:34px;height:34px;border-radius:10px;background:#f8fbf9;font-size:18px;color:#96a3a7}
+.star.on{background:#fff4d8;color:#bf8908}
+.card-title{border:0;background:none;padding:0;text-align:left;font-size:16px;font-weight:900;color:var(--ink);line-height:1.3}
+.card-title:hover,.link:hover{text-decoration:underline}
+.meta{display:flex;flex-direction:column;gap:5px;color:#6a7a83;font-size:12px}
+.progress{height:8px;border-radius:999px;background:#eef2f1;overflow:hidden}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--green-2))}
+.card-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.link{border:0;background:none;padding:0;color:var(--green);font-weight:900;text-align:left}
+.viewtoggle{display:flex;gap:6px;border:1px solid var(--line);background:#f7faf8;border-radius:10px;padding:4px}
+.viewtoggle button{border:0;background:transparent;color:#60717b;border-radius:8px;padding:6px 10px;font-weight:800}
+.viewtoggle button.active{background:#fff;color:var(--green);box-shadow:0 1px 5px rgba(0,0,0,.06)}
+.results.list{grid-template-columns:1fr}
+.results.list .card{flex-direction:row}
+.results.list .cover{width:200px;height:auto;min-height:190px;flex:none}
+.results.list .cb{min-height:190px}
+.breadcrumb{font-size:12px;color:#667983;display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.breadcrumb button{border:0;background:none;padding:0;color:var(--green);font-weight:800}
+.course-hero{margin-bottom:18px;padding:22px}
+.course-hero .hero-row{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tabs{display:flex;gap:6px;overflow:auto;padding:5px;background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:18px}
+.tabs button{border:0;background:transparent;color:#5f717a;padding:10px 14px;border-radius:10px;font-weight:800;white-space:nowrap}
+.tabs button.active{background:var(--soft);color:var(--green)}
+.course-layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(260px,.85fr);gap:16px;align-items:start}
+.maincol,.sidecol{display:flex;flex-direction:column;gap:16px;min-width:0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.widget{padding:16px}
+.kpi{font-size:28px;font-weight:900;color:var(--ink);margin:8px 0 2px}
+.mini-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.item{display:flex;gap:10px;padding:11px 0;border-top:1px solid #e7ece9;align-items:flex-start}
+.item:first-child{border-top:0;padding-top:0}
+.ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--soft);color:var(--green);flex:none}
+.item strong{display:block;font-size:13px;color:var(--ink)}
+.item small{display:block;font-size:11px;color:#72828a;margin-top:3px}
+.section{padding:0;overflow:hidden}
+.section summary{list-style:none;padding:15px 16px;background:#f7faf8;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-weight:900;color:#22363f}
+.section summary::-webkit-details-marker{display:none}
+.section summary .left{display:flex;align-items:center;gap:10px}
+.section summary .dot{width:28px;height:28px;border-radius:9px;background:#e5eefb;color:#2e67b7;display:grid;place-items:center;font-size:17px}
+.section-body{padding:14px 16px 16px}
+.section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mock{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fbfdfc}
+.mock h4{font-size:14px;margin-bottom:10px}
+.mock-phone,.mock-table,.mock-kanban,.mock-chart,.mock-split,.mock-board{border:1px solid #d6e1dd;border-radius:12px;background:#fff;overflow:hidden;min-height:170px}
+.phone-top{height:16px;background:#eef4f1;border-bottom:1px solid #dfe8e4}
+.phone-body{padding:10px;display:flex;flex-direction:column;gap:9px}
+.line{height:10px;background:#edf2f0;border-radius:999px}.line.sm{width:46%}.line.md{width:72%}.line.lg{width:100%}.line.green{background:#cdebdc}.line.blue{background:#d7e6ff}.line.orange{background:#ffe2c6}
+.table-head,.table-row{display:grid;grid-template-columns:1.2fr .9fr .7fr;gap:8px;padding:10px 12px}
+.table-head{background:#f3f8f5;font-size:11px;font-weight:900;color:#53646d;border-bottom:1px solid #e3ebe7}
+.table-row{font-size:12px;border-top:1px solid #eef2f0}
+.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px}
+.col{background:#f5f8f7;border:1px solid #e3ebe7;border-radius:10px;padding:8px;min-height:145px}
+.ticket{background:#fff;border:1px solid #dde5e1;border-radius:8px;padding:8px;font-size:11px;margin-top:7px}
+.chart-area{display:flex;align-items:end;gap:10px;height:150px;padding:12px 12px 16px}
+.bar{flex:1;border-radius:10px 10px 0 0;background:linear-gradient(180deg,#68c59b,#0d8159)}
+.bar.b2{background:linear-gradient(180deg,#91b4ff,#4268d9)}
+.bar.b3{background:linear-gradient(180deg,#f3c778,#dd8b29)}
+.split{display:grid;grid-template-columns:1.2fr .8fr;height:170px}
+.split .leftp{padding:12px;border-right:1px solid #e3ebe7;display:flex;flex-direction:column;gap:8px}
+.split .rightp{padding:12px;display:grid;grid-template-rows:1fr 1fr;gap:8px}
+.split .box{border:1px dashed #d6e1dd;border-radius:10px;background:#f8fbf9}
+.board{padding:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.board .panelx{border:1px solid #e1e8e4;border-radius:10px;padding:10px;background:#fbfcfc;min-height:130px}
+.calendar-mini{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px}
+.calendar-mini span{font-size:10px;min-height:20px;border-radius:6px;display:grid;place-items:center;background:#f4f7f6;color:#5e717a}
+.calendar-mini span.marked{background:#e3f4ea;color:#095d3f;font-weight:900}
+.sidebox{padding:16px}
+.sidebox h3{margin-bottom:10px}
+.notice{padding:12px;border-radius:12px;background:#f6faf7;border:1px solid #dbe7e1;margin-top:10px}
+.notice strong{font-size:13px;color:#234537;display:block}
+.notice p{font-size:12px;margin-top:4px}
+.info-row{display:flex;gap:10px;padding:11px 0;border-top:1px solid #e8eeeb;align-items:flex-start}
+.info-row:first-child{border-top:0;padding-top:0}
+.badgex{padding:5px 9px;border-radius:999px;background:#eef4f1;color:#4d626c;font-size:11px;font-weight:900}
+.cal-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.9fr);gap:16px}
+.calbox{padding:16px}
+.cal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.weekday{font-size:11px;font-weight:900;color:#5d707a;text-align:center;padding:7px 0}
+.day{min-height:84px;border:1px solid #e2eae6;border-radius:10px;background:#fff;padding:6px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.day.other{background:#f8fbf9;color:#9aa7ac}
+.day.selected{border:2px solid var(--green);background:#eefaf2}
+.day .num{font-size:12px;font-weight:900}
+.pill-event{display:block;font-size:9px;line-height:1.25;background:#e8f4ec;color:#0a6242;padding:3px 4px;border-radius:6px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agenda-item{padding:12px 0;border-top:1px solid #e7ece9}
+.agenda-item:first-child{border-top:0;padding-top:0}
+.agenda-item strong{display:block;font-size:13px;color:var(--ink)}
+.agenda-item small{display:block;font-size:11px;color:#6c7d86;margin-top:3px}
+.empty{padding:24px;text-align:center}
+.footer{padding:16px;text-align:center;color:#73828b;font-size:10px;border-top:1px solid var(--line);background:#fff;margin-top:28px}
+@media (max-width:980px){
+  .results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-grid .field:first-child{grid-column:1/-1}
+  .course-layout,.cal-layout{grid-template-columns:1fr}
+}
+@media (max-width:680px){
+  .main{padding:22px 14px 34px}
+  .topbar{padding:12px 14px;justify-content:center}
+  .nav{justify-content:center}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .results{grid-template-columns:1fr}
+  .results.list .card{flex-direction:column}
+  .results.list .cover{width:auto;min-height:110px}
+  .grid-2,.section-grid{grid-template-columns:1fr}
+  .filter-grid{grid-template-columns:1fr}
+  .tabs{padding:4px}
+  .day{min-height:56px}
+  .pill-event{font-size:0;width:8px;height:8px;padding:0;border-radius:50%}
+  .cal-layout{gap:12px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+(() => {
+  const root = document.getElementById('app');
+  const today = '2026-11-07';
+  const courses = [
+    {
+      id:'ux',
+      color:'c1',
+      title:'Design de Interfaces Digitais',
+      area:'Design e UX',
+      term:'2º semestre · 2026',
+      status:'ativo',
+      teacher:'Profa. Helena Martins',
+      room:'Lab A1-302',
+      meeting:'Terças · 19h30–21h10',
+      progress:72,
+      hero:'Curso voltado à criação de interfaces, fluxos e protótipos para experiências digitais.',
+      noticeTitle:'Entrega do wireframe navegável',
+      noticeText:'Publicar o link do protótipo inicial até 12/11. Comentários serão discutidos na próxima aula.',
+      layout:'dashboard'
+    },
+    {
+      id:'web',
+      color:'c2',
+      title:'Desenvolvimento Web Responsivo',
+      area:'Programação Web',
+      term:'2º semestre · 2026',
+      status:'ativo',
+      teacher:'Prof. Ricardo Lopes',
+      room:'Lab B2-105',
+      meeting:'Quartas · 20h30–22h20',
+      progress:58,
+      hero:'Disciplina focada em layout adaptável, componentes e boas práticas de front-end.',
+      noticeTitle:'Sprint 3 liberada',
+      noticeText:'A sprint atual inclui landing page, grid responsivo e formulário validado em JavaScript.',
+      layout:'modules'
+    },
+    {
+      id:'dados',
+      color:'c3',
+      title:'Banco de Dados Aplicado',
+      area:'Dados',
+      term:'2º semestre · 2026',
+      status:'ativo',
+      teacher:'Profa. Laura Farias',
+      room:'Sala C1-207',
+      meeting:'Segundas · 18h40–20h20',
+      progress:64,
+      hero:'Modelagem, consultas SQL e análise de estrutura de dados em cenários práticos.',
+      noticeTitle:'Laboratório SQL 2 disponível',
+      noticeText:'Resolver a lista com JOINs e subconsultas antes da aula de revisão.',
+      layout:'table'
+    },
+    {
+      id:'ia',
+      color:'c4',
+      title:'Inteligência Artificial Prática',
+      area:'IA e Machine Learning',
+      term:'2º semestre · 2026',
+      status:'ativo',
+      teacher:'Prof. Diego Nunes',
+      room:'Lab C3-110',
+      meeting:'Quintas · 19h00–21h00',
+      progress:49,
+      hero:'Experimentos guiados com prompts, classificação, automação e avaliação de modelos.',
+      noticeTitle:'Experimento com classificação',
+      noticeText:'Subir o notebook com análise de desempenho e explicação dos resultados.',
+      layout:'analytics'
+    },
+    {
+      id:'proj',
+      color:'c5',
+      title:'Projeto Integrador Colaborativo',
+      area:'Projeto e Gestão',
+      term:'2º semestre · 2026',
+      status:'ativo',
+      teacher:'Profa. Amanda Costa',
+      room:'Sala A2-114',
+      meeting:'Sextas · 20h30–22h20',
+      progress:83,
+      hero:'Planejamento, divisão de tarefas, checkpoints do grupo e acompanhamento de entregas.',
+      noticeTitle:'Checkpoint do grupo na próxima semana',
+      noticeText:'Levar versão resumida da apresentação e quadro de tarefas atualizado.',
+      layout:'project'
+    }
+  ];
+
+  const calendarEvents = [
+    ['2026-11-08','Entrega do protótipo inicial','Design de Interfaces Digitais'],
+    ['2026-11-10','Sprint 3 — revisão de layout','Desenvolvimento Web Responsivo'],
+    ['2026-11-12','Laboratório SQL 2','Banco de Dados Aplicado'],
+    ['2026-11-15','Experimento de classificação','Inteligência Artificial Prática'],
+    ['2026-11-18','Checkpoint do grupo','Projeto Integrador Colaborativo'],
+    ['2026-11-22','Apresentação parcial do projeto','Projeto Integrador Colaborativo']
+  ];
+
+  const state = {
+    page:'courses',
+    selected:'ux',
+    tab:'Visão geral',
+    q:'',
+    area:'todas',
+    status:'todos',
+    sort:'az',
+    favorites:['ux','proj'],
+    view:'grid',
+    calYear:2026,
+    calMonth:10,
+    calDay:'2026-11-08'
+  };
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const selectedCourse = () => courses.find(c => c.id === state.selected) || courses[0];
+  const favCount = () => state.favorites.length;
+
+  function stats(){
+    return `
+      <div class="stats">
+        <div class="panel stat"><div class="stat-icon">📚</div><div><strong>5</strong><small>Cursos disponíveis</small></div></div>
+        <div class="panel stat"><div class="stat-icon">⭐</div><div><strong>${favCount()}</strong><small>Favoritos marcados</small></div></div>
+        <div class="panel stat"><div class="stat-icon">🗓️</div><div><strong>6</strong><small>Atividades neste mês</small></div></div>
+        <div class="panel stat"><div class="stat-icon">✅</div><div><strong>100%</strong><small>Cursos ativos nesta versão</small></div></div>
+      </div>`;
+  }
+
+  function courseCard(c){
+    const fav = state.favorites.includes(c.id);
+    return `
+      <article class="card">
+        <div class="cover ${c.color}"><span>${esc(c.area)}</span></div>
+        <div class="cb">
+          <div class="card-top">
+            <span class="badge ${c.status !== 'ativo' ? 'off' : ''}">${c.status === 'ativo' ? 'EM ANDAMENTO' : 'ARQUIVADO'}</span>
+            <button class="star ${fav ? 'on' : ''}" data-fav="${c.id}" aria-label="Favoritar curso">${fav ? '★' : '☆'}</button>
+          </div>
+          <button class="card-title" data-open="${c.id}">${esc(c.title)}</button>
+          <div class="meta">
+            <span>👤 ${esc(c.teacher)}</span>
+            <span>📍 ${esc(c.room)}</span>
+            <span>🕒 ${esc(c.meeting)}</span>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#708089;margin-bottom:6px"><span>Progresso estimado</span><strong>${c.progress}%</strong></div>
+            <div class="progress"><span style="width:${c.progress}%"></span></div>
+          </div>
+          <div class="card-foot">
+            <button class="link" data-open="${c.id}">Entrar no curso →</button>
+            <span class="badgex">Mockup exclusivo</span>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function filteredCourses(){
+    let items = courses.filter(c =>
+      norm(`${c.title} ${c.area} ${c.teacher}`).includes(norm(state.q)) &&
+      (state.area === 'todas' || c.area === state.area) &&
+      (state.status === 'todos' || c.status === state.status)
+    );
+    items.sort((a,b)=> state.sort === 'za' ? b.title.localeCompare(a.title,'pt-BR') : a.title.localeCompare(b.title,'pt-BR'));
+    return items;
+  }
+
+  function coursesPage(){
+    const items = filteredCourses();
+    return `
+      <div class="eyebrow">AMBIENTE DE APRENDIZAGEM</div>
+      <h1>Meus cursos</h1>
+      <p class="lead">Agora com cinco cursos diferentes e páginas internas realmente distintas, cada uma com um mockup próprio.</p>
+      ${stats()}
+      <section class="panel filterbox">
+        <div class="filter-head">
+          <div>
+            <h2>Filtrar disciplinas</h2>
+            <p>Use busca, área e ordenação para explorar os cursos disponíveis.</p>
+          </div>
+          <button class="btn" data-reset="true">Limpar filtros</button>
+        </div>
+        <div class="chips">
+          <button class="chip ${state.area==='todas'?'active':''}" data-chip="todas">Todas as áreas</button>
+          <button class="chip ${state.area==='Design e UX'?'active':''}" data-chip="Design e UX">Design e UX</button>
+          <button class="chip ${state.area==='Programação Web'?'active':''}" data-chip="Programação Web">Programação Web</button>
+          <button class="chip ${state.area==='Dados'?'active':''}" data-chip="Dados">Dados</button>
+          <button class="chip ${state.area==='IA e Machine Learning'?'active':''}" data-chip="IA e Machine Learning">IA</button>
+          <button class="chip ${state.area==='Projeto e Gestão'?'active':''}" data-chip="Projeto e Gestão">Projeto</button>
+        </div>
+        <div class="filter-grid">
+          <div class="field"><label>Buscar curso</label><input id="search" class="control" placeholder="Ex.: web, IA, banco, projeto..." value="${esc(state.q)}"></div>
+          <div class="field"><label>Situação</label><select class="control" data-field="status"><option value="todos" ${state.status==='todos'?'selected':''}>Todas</option><option value="ativo" ${state.status==='ativo'?'selected':''}>Em andamento</option></select></div>
+          <div class="field"><label>Ordenar por</label><select class="control" data-field="sort"><option value="az" ${state.sort==='az'?'selected':''}>Nome A–Z</option><option value="za" ${state.sort==='za'?'selected':''}>Nome Z–A</option></select></div>
+          <div class="field"><label>Visualização</label><div class="viewtoggle"><button data-view="grid" class="${state.view==='grid'?'active':''}">Cards</button><button data-view="list" class="${state.view==='list'?'active':''}">Lista</button></div></div>
+          <div class="field"><label>Favoritos</label><input class="control" value="${favCount()} cursos marcados" readonly></div>
+        </div>
+      </section>
+      <div class="toolbar">
+        <div>
+          <h2>Disciplinas disponíveis</h2>
+          <p class="muted">${items.length} curso(s) encontrado(s)</p>
+        </div>
+      </div>
+      ${items.length ? `<div class="results ${state.view==='list'?'list':''}">${items.map(courseCard).join('')}</div>` : `<div class="panel empty"><h3>Nenhum curso encontrado</h3><p>Tente outro termo de busca ou remova algum filtro.</p></div>`}
+      <div class="footer">Protótipo acadêmico demonstrativo · sem conexão com o Moodle oficial</div>`;
+  }
+
+  function mockDashboard(course){
+    return `
+      <div class="grid-2">
+        <section class="widget">
+          <h3>Resumo da semana</h3>
+          <div class="kpi">${course.progress}%</div>
+          <p>Seu avanço estimado nesta disciplina.</p>
+          <div class="mini-list">
+            <div class="item"><div class="ic">🧩</div><div><strong>Protótipo navegável</strong><small>Atividade em andamento com entrega nesta semana.</small></div></div>
+            <div class="item"><div class="ic">📝</div><div><strong>Checklist de usabilidade</strong><small>3 de 5 etapas concluídas.</small></div></div>
+          </div>
+        </section>
+        <section class="widget">
+          <h3>Mockup do app mobile</h3>
+          <div class="mock-phone">
+            <div class="phone-top"></div>
+            <div class="phone-body">
+              <div class="line lg green"></div>
+              <div class="line md"></div>
+              <div class="line sm blue"></div>
+              <div class="line lg"></div>
+              <div class="line md orange"></div>
+              <div class="line lg"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <section class="section" open>
+        <summary><span class="left"><span class="dot">▾</span>Fluxo principal do usuário</span><span>Mockup exclusivo</span></summary>
+        <div class="section-body">
+          <div class="section-grid">
+            <div class="mock"><h4>Tela inicial</h4><div class="mock-phone"><div class="phone-top"></div><div class="phone-body"><div class="line lg"></div><div class="line md"></div><div class="line lg green"></div><div class="line lg"></div></div></div></div>
+            <div class="mock"><h4>Etapa de feedback</h4><div class="mock-split"><div class="split"><div class="leftp"><div class="line lg"></div><div class="line md"></div><div class="line lg"></div></div><div class="rightp"><div class="box"></div><div class="box"></div></div></div></div></div>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  function mockModules(){
+    return `
+      <section class="widget">
+        <h3>Módulos da sprint</h3>
+        <div class="mini-list">
+          <div class="item"><div class="ic">📱</div><div><strong>Layout mobile-first</strong><small>Cards responsivos, grid e navegação adaptativa.</small></div></div>
+          <div class="item"><div class="ic">🧪</div><div><strong>Formulário validado</strong><small>Validação de campos e mensagens de erro.</small></div></div>
+          <div class="item"><div class="ic">🎨</div><div><strong>Biblioteca de componentes</strong><small>Botões, campos e blocos reutilizáveis.</small></div></div>
+        </div>
+      </section>
+      <section class="section" open>
+        <summary><span class="left"><span class="dot">▾</span>Mockup da página responsiva</span><span>Nova composição</span></summary>
+        <div class="section-body">
+          <div class="mock"><h4>Preview da landing page</h4><div class="mock-split"><div class="split"><div class="leftp"><div class="line lg green"></div><div class="line lg"></div><div class="line md"></div><div class="line lg"></div></div><div class="rightp"><div class="box"></div><div class="box"></div></div></div></div></div>
+          <div class="mock" style="margin-top:12px"><h4>Quadro de componentes</h4><div class="mock-board"><div class="board"><div class="panelx"><div class="line lg"></div><div class="line md"></div><div class="line sm green"></div></div><div class="panelx"><div class="line lg"></div><div class="line lg blue"></div><div class="line md"></div></div></div></div></div>
+        </div>
+      </section>`;
+  }
+
+  function mockTable(){
+    return `
+      <section class="widget">
+        <h3>Consultas e exercícios</h3>
+        <p style="margin-top:6px">Acompanhe o status dos laboratórios e das consultas SQL da turma.</p>
+      </section>
+      <section class="section" open>
+        <summary><span class="left"><span class="dot">▾</span>Mockup do painel SQL</span><span>Estrutura tabular</span></summary>
+        <div class="section-body">
+          <div class="mock"><h4>Tabela de exercícios</h4><div class="mock-table"><div class="table-head"><span>Atividade</span><span>Status</span><span>Pontuação</span></div><div class="table-row"><span>JOINs</span><span>Concluído</span><span>9,0</span></div><div class="table-row"><span>Subconsultas</span><span>Em andamento</span><span>—</span></div><div class="table-row"><span>Modelagem ER</span><span>Concluído</span><span>8,5</span></div></div></div>
+          <div class="grid-2" style="margin-top:12px"><div class="mock"><h4>Diagrama lógico</h4><div class="mock-board"><div class="board"><div class="panelx"><div class="line lg"></div><div class="line md"></div></div><div class="panelx"><div class="line lg"></div><div class="line sm"></div></div></div></div></div><div class="mock"><h4>Calendário de práticas</h4><div class="mock-board"><div class="calendar-mini">${Array.from({length:28},(_,i)=>`<span class="${[5,12,19,26].includes(i+1)?'marked':''}">${i+1}</span>`).join('')}</div></div></div></div>
+        </div>
+      </section>`;
+  }
+
+  function mockAnalytics(){
+    return `
+      <div class="grid-2">
+        <section class="widget">
+          <h3>Indicadores do experimento</h3>
+          <div class="kpi">87%</div>
+          <p>Acurácia do classificador da última atividade.</p>
+        </section>
+        <section class="widget">
+          <h3>Distribuição de resultados</h3>
+          <div class="mock-chart"><div class="chart-area"><div class="bar" style="height:72%"></div><div class="bar b2" style="height:88%"></div><div class="bar b3" style="height:58%"></div><div class="bar" style="height:81%"></div></div></div>
+        </section>
+      </div>
+      <section class="section" open>
+        <summary><span class="left"><span class="dot">▾</span>Painel do experimento</span><span>Visual analítico</span></summary>
+        <div class="section-body">
+          <div class="grid-2"><div class="mock"><h4>Etapas do pipeline</h4><div class="mock-board"><div class="board"><div class="panelx"><div class="line lg"></div><div class="line sm green"></div></div><div class="panelx"><div class="line lg"></div><div class="line md"></div></div></div></div></div><div class="mock"><h4>Parâmetros e saída</h4><div class="mock-split"><div class="split"><div class="leftp"><div class="line lg"></div><div class="line md"></div><div class="line md"></div></div><div class="rightp"><div class="box"></div><div class="box"></div></div></div></div></div></div>
+        </div>
+      </section>`;
+  }
+
+  function mockProject(){
+    return `
+      <section class="widget">
+        <h3>Andamento do grupo</h3>
+        <p style="margin-top:6px">Distribuição de tarefas e checkpoints planejados para a apresentação final.</p>
+      </section>
+      <section class="section" open>
+        <summary><span class="left"><span class="dot">▾</span>Quadro colaborativo</span><span>Kanban do projeto</span></summary>
+        <div class="section-body">
+          <div class="mock"><h4>Kanban do grupo</h4><div class="mock-kanban"><div class="columns"><div class="col"><strong style="font-size:12px">A fazer</strong><div class="ticket">Slide de abertura</div><div class="ticket">Revisão visual</div></div><div class="col"><strong style="font-size:12px">Em andamento</strong><div class="ticket">Roteiro de avaliação</div><div class="ticket">Teste com usuário</div></div><div class="col"><strong style="font-size:12px">Concluído</strong><div class="ticket">Protótipo inicial</div><div class="ticket">Objetivos de usabilidade</div></div></div></div></div>
+          <div class="grid-2" style="margin-top:12px"><div class="mock"><h4>Agenda do grupo</h4><div class="mock-board"><div class="calendar-mini">${Array.from({length:21},(_,i)=>`<span class="${[4,8,13,18,21].includes(i+1)?'marked':''}">${i+1}</span>`).join('')}</div></div></div><div class="mock"><h4>Responsáveis</h4><div class="mock-board"><div class="board"><div class="panelx"><div class="line lg"></div><div class="line md"></div><div class="line sm"></div></div><div class="panelx"><div class="line lg"></div><div class="line md green"></div><div class="line sm"></div></div></div></div></div></div>
+        </div>
+      </section>`;
+  }
+
+  function leftContent(course){
+    if(course.id === 'ux') return mockDashboard(course);
+    if(course.id === 'web') return mockModules();
+    if(course.id === 'dados') return mockTable();
+    if(course.id === 'ia') return mockAnalytics();
+    return mockProject();
+  }
+
+  function sideContent(course){
+    return `
+      <section class="sidebox">
+        <h3>Avisos</h3>
+        <div class="notice">
+          <strong>${esc(course.noticeTitle)}</strong>
+          <p>${esc(course.noticeText)}</p>
+        </div>
+      </section>
+      <section class="sidebox">
+        <h3>Informações da disciplina</h3>
+        <div class="info-row"><div class="ic">👤</div><div><strong>${esc(course.teacher)}</strong><p>Docente responsável</p></div></div>
+        <div class="info-row"><div class="ic">📍</div><div><strong>${esc(course.room)}</strong><p>Sala ou laboratório</p></div></div>
+        <div class="info-row"><div class="ic">🕒</div><div><strong>${esc(course.meeting)}</strong><p>Horário de encontro</p></div></div>
+      </section>
+      <section class="sidebox">
+        <h3>Próximas ações</h3>
+        <div class="mini-list">
+          <div class="item"><div class="ic">📌</div><div><strong>Revisar material da semana</strong><small>Antes do próximo encontro.</small></div></div>
+          <div class="item"><div class="ic">✅</div><div><strong>Atualizar entregas</strong><small>Conferir o progresso do curso.</small></div></div>
+          <div class="item"><div class="ic">💬</div><div><strong>Registrar dúvidas</strong><small>Adicionar pontos para discussão em aula.</small></div></div>
+        </div>
+      </section>`;
+  }
+
+  function coursePage(){
+    const c = selectedCourse();
+    return `
+      <div class="breadcrumb"><button data-back="courses">Meus cursos</button><span>›</span><span>${esc(c.title)}</span></div>
+      <section class="panel course-hero ${c.color}">
+        <div class="hero-row">
+          <div>
+            <div class="eyebrow" style="color:rgba(255,255,255,.92)">${esc(c.area)}</div>
+            <h1 style="color:#fff">${esc(c.title)}</h1>
+            <p class="lead" style="color:rgba(255,255,255,.92)">${esc(c.hero)}</p>
+            <div class="hero-badges">
+              <span class="badge" style="background:rgba(255,255,255,.18);color:#fff">${esc(c.term)}</span>
+              <span class="badge" style="background:rgba(255,255,255,.18);color:#fff">${c.progress}% concluído</span>
+              <span class="badge" style="background:rgba(255,255,255,.18);color:#fff">Mockup próprio</span>
+            </div>
+          </div>
+          <button class="btn" data-back="courses">← Voltar</button>
+        </div>
+      </section>
+      <div class="tabs">
+        ${['Visão geral','Atividades','Materiais','Equipe'].map(tab => `<button class="${state.tab===tab?'active':''}" data-tab="${tab}">${tab}</button>`).join('')}
+      </div>
+      <div class="course-layout">
+        <div class="maincol">
+          ${state.tab === 'Visão geral' ? leftContent(c) : state.tab === 'Atividades' ? `
+            <section class="widget"><h3>Atividades da disciplina</h3><div class="mini-list"><div class="item"><div class="ic">📝</div><div><strong>Entrega principal</strong><small>Atividade relacionada ao mockup deste curso.</small></div></div><div class="item"><div class="ic">📊</div><div><strong>Acompanhamento</strong><small>Indicadores e progresso da semana.</small></div></div><div class="item"><div class="ic">🧭</div><div><strong>Roteiro orientado</strong><small>Passos para conclusão da tarefa.</small></div></div></div></section>` : state.tab === 'Materiais' ? `
+            <section class="widget"><h3>Materiais disponibilizados</h3><div class="section-grid"><div class="mock"><h4>Leitura obrigatória</h4><div class="mock-phone"><div class="phone-top"></div><div class="phone-body"><div class="line lg"></div><div class="line md"></div><div class="line lg"></div><div class="line sm"></div></div></div></div><div class="mock"><h4>Arquivo complementar</h4><div class="mock-board"><div class="board"><div class="panelx"><div class="line lg"></div><div class="line md"></div></div><div class="panelx"><div class="line lg"></div><div class="line sm green"></div></div></div></div></div></div></section>` : `
+            <section class="widget"><h3>Equipe e colaboração</h3><div class="mini-list"><div class="item"><div class="ic">👥</div><div><strong>Grupo principal</strong><small>Espaço para coordenação de membros.</small></div></div><div class="item"><div class="ic">📅</div><div><strong>Reuniões</strong><small>Calendário de checkpoints e revisões.</small></div></div><div class="item"><div class="ic">💡</div><div><strong>Ideias</strong><small>Registro de sugestões e melhorias.</small></div></div></div></section>`}
+        </div>
+        <aside class="sidecol">
+          ${sideContent(c)}
+        </aside>
+      </div>
+      <div class="footer">Cada disciplina foi redesenhada com conteúdo e mockup próprios para diferenciar melhor a navegação.</div>`;
+  }
+
+  function monthLabel(y,m){
+    const label = new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric'}).format(new Date(y,m,1));
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function dateKey(y,m,d){
+    return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  }
+
+  function calendarPage(){
+    const y = state.calYear, m = state.calMonth;
+    const firstOffset = (new Date(y,m,1).getDay()+6)%7;
+    const totalDays = new Date(y,m+1,0).getDate();
+    const cells = Math.ceil((firstOffset + totalDays)/7)*7;
+    const monthEvents = calendarEvents.filter(e => e[0].slice(0,7) === `${y}-${String(m+1).padStart(2,'0')}`);
+    const selected = calendarEvents.filter(e => e[0] === state.calDay);
+    let grid = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map(d => `<div class="weekday">${d}</div>`).join('');
+    for(let i=0;i<cells;i++){
+      const d = new Date(y,m,i-firstOffset+1);
+      const key = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
+      const ev = calendarEvents.filter(e => e[0] === key);
+      grid += `<button class="day ${d.getMonth()!==m?'other':''} ${state.calDay===key?'selected':''}" data-day="${key}"><span class="num">${d.getDate()}</span>${ev.map(x=>`<span class="pill-event">${esc(x[1])}</span>`).join('')}</button>`;
+    }
+    return `
+      <div class="eyebrow">PLANEJAMENTO ACADÊMICO</div>
+      <h1>Calendário</h1>
+      <p class="lead">Acompanhe as entregas principais dos cinco cursos desta versão do protótipo.</p>
+      <div class="cal-layout">
+        <section class="calbox">
+          <div class="cal-head">
+            <h2>${monthLabel(y,m)}</h2>
+            <div style="display:flex;gap:8px"><button class="btn" data-month="prev">‹</button><button class="btn" data-month="today">Hoje</button><button class="btn" data-month="next">›</button></div>
+          </div>
+          <div class="cal-grid">${grid}</div>
+        </section>
+        <aside class="calbox">
+          <h3>Agenda do dia</h3>
+          <p style="font-size:12px;margin-top:6px">${new Date(state.calDay+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})}</p>
+          <div style="margin-top:12px">${selected.length ? selected.map(ev => `<div class="agenda-item"><strong>${esc(ev[1])}</strong><small>${esc(ev[2])}</small></div>`).join('') : '<div class="agenda-item"><strong>Nenhuma atividade cadastrada</strong><small>Selecione outro dia no calendário.</small></div>'}</div>
+          <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"><h3>Atividades do mês</h3><div style="margin-top:10px">${monthEvents.map(ev => `<div class="agenda-item"><strong>${ev[0].slice(-2)}/${ev[0].slice(5,7)} · ${esc(ev[1])}</strong><small>${esc(ev[2])}</small></div>`).join('')}</div></div>
+        </aside>
+      </div>
+      <div class="footer">Eventos ilustrativos criados apenas para demonstrar a interface do calendário.</div>`;
+  }
+
+  function homePage(){
+    return `
+      <div class="eyebrow">INÍCIO</div>
+      <h1>Painel inicial</h1>
+      <p class="lead">Escolha um curso para explorar seus mockups internos ou consulte o calendário geral das atividades.</p>
+      ${stats()}
+      <div class="grid-2">
+        <section class="widget"><h3>Acesso rápido</h3><div class="mini-list">${courses.slice(0,3).map(c => `<div class="item"><div class="ic">📘</div><div><strong>${esc(c.title)}</strong><small>${esc(c.area)}</small></div><button class="link" data-open="${c.id}">Abrir →</button></div>`).join('')}</div></section>
+        <section class="widget"><h3>O que mudou nesta versão?</h3><div class="mini-list"><div class="item"><div class="ic">✨</div><div><strong>5 cursos inéditos</strong><small>Todos com identidade própria.</small></div></div><div class="item"><div class="ic">🧱</div><div><strong>Mockups diferentes</strong><small>Cada curso possui estrutura interna distinta.</small></div></div><div class="item"><div class="ic">🔍</div><div><strong>Navegação mais clara</strong><small>Filtros, tabs e conteúdo melhor separados.</small></div></div></div></section>
+      </div>
+      <div class="footer">Protótipo acadêmico de demonstração · versão V4</div>`;
+  }
+
+  function render(){
+    root.innerHTML = `
+      <header class="topbar">
+        <div class="brand"><span class="mark">♣</span><span>unipampa<small>Universidade Federal do Pampa</small></span></div>
+        <nav class="nav">
+          <button class="${state.page==='home'?'active':''}" data-page="home">Página inicial</button>
+          <button class="${state.page==='courses'?'active':''}" data-page="courses">Meus cursos</button>
+          <button class="${state.page==='calendar'?'active':''}" data-page="calendar">Calendário</button>
+        </nav>
+        <div class="user"><span>RD</span><div class="avatar">RD</div></div>
+      </header>
+      <div class="banner">Protótipo acadêmico de IHC · 5 cursos com mockups novos e páginas internas diferenciadas</div>
+      <main class="main">${state.page==='home' ? homePage() : state.page==='calendar' ? calendarPage() : state.page==='course' ? coursePage() : coursesPage()}</main>`;
+  }
+
+  root.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    if(btn.dataset.page){ state.page = btn.dataset.page; render(); return; }
+    if(btn.dataset.open){ state.selected = btn.dataset.open; state.page = 'course'; state.tab = 'Visão geral'; render(); return; }
+    if(btn.dataset.back){ state.page = btn.dataset.back; render(); return; }
+    if(btn.dataset.tab){ state.tab = btn.dataset.tab; render(); return; }
+    if(btn.dataset.fav){
+      const id = btn.dataset.fav;
+      state.favorites = state.favorites.includes(id) ? state.favorites.filter(x=>x!==id) : [...state.favorites,id];
+      render(); return;
+    }
+    if(btn.dataset.reset){ state.q=''; state.area='todas'; state.status='todos'; state.sort='az'; render(); return; }
+    if(btn.dataset.chip){ state.area = btn.dataset.chip; render(); return; }
+    if(btn.dataset.view){ state.view = btn.dataset.view; render(); return; }
+    if(btn.dataset.month){
+      if(btn.dataset.month === 'today'){
+        state.calYear = 2026; state.calMonth = 10; state.calDay = '2026-11-07';
+      } else {
+        const d = new Date(state.calYear, state.calMonth + (btn.dataset.month === 'next' ? 1 : -1), 1);
+        state.calYear = d.getFullYear(); state.calMonth = d.getMonth(); state.calDay = dateKey(state.calYear,state.calMonth,1);
+      }
+      render(); return;
+    }
+    if(btn.dataset.day){ state.calDay = btn.dataset.day; const d = new Date(btn.dataset.day+'T12:00:00'); state.calYear = d.getFullYear(); state.calMonth = d.getMonth(); render(); return; }
+  });
+
+  root.addEventListener('input', e => {
+    if(e.target.id === 'search'){ state.q = e.target.value; render(); }
+  });
+
+  root.addEventListener('change', e => {
+    const field = e.target.dataset.field;
+    if(field){ state[field] = e.target.value; render(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
