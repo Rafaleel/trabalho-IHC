@@ -50,3 +50,66 @@ test('ui: botões e etiquetas', () => {
   assert.match(ui.statusTag('entregue'), /tag--success/);
   assert.equal(ui.esc('<a href="x">&'), '&lt;a href=&quot;x&quot;&gt;&amp;');
 });
+
+test('curso: aba Curso de IHC', () => {
+  const App = loadApp();
+  const html = App.views.curso(mkCtx(App, '#/curso/ihc'));
+  assert.match(html, /Interação Humano-Computador/);
+  assert.equal(count(html, /data-section-id=/g), 14);
+  assert.match(html, /Esta semana/);
+  assert.match(html, /href="#\/curso\/ihc\/plano"/);
+  assert.match(html, /href="#\/curso\/ihc\/avisos"/);
+  const iCal = html.indexOf('Calendário do curso');
+  const iAv = html.indexOf('Avisos do professor');
+  const iInfo = html.indexOf('Informações do curso');
+  assert.ok(iCal > 0 && iCal < iAv && iAv < iInfo, 'ordem da barra lateral');
+  assert.ok(!/\[(PDF|ATIVIDADE|KAHOOT|PPTX)\]/.test(html));
+  assert.match(html, /Pendente/);
+  assert.match(html, /Entregue/);
+  assert.match(html, />14 de 17</);
+  assert.match(html, /atividades entregues/);
+  assert.match(html, /Próxima entrega/);
+  // abas do curso
+  for (const t of ['participantes', 'notas', 'atividades']) assert.match(html, new RegExp(`href="#/curso/ihc/${t}"`));
+  assert.match(html, /href="#\/curso\/ihc"[^>]*aria-current="page"/);
+  // seção atual aberta, seção antiga fechada por padrão
+  assert.match(html, /data-section-id="ihc-s8"[^>]*aria-expanded="true"|aria-expanded="true"[^>]*data-section-id="ihc-s8"/);
+  assert.match(html, /data-section-id="ihc-s2"[^>]*aria-expanded="false"|aria-expanded="false"[^>]*data-section-id="ihc-s2"/);
+  // calendário lateral marca dias com entrega
+  assert.match(html, /novembro de 2026/);
+  assert.match(html, /data-day="2026-11-08"[^>]*aria-current="date"|aria-current="date"[^>]*data-day="2026-11-08"/);
+  assert.equal(count(html, /cal-mini__dot/g) >= 3, true);
+});
+
+test('curso: seções abertas por estado', () => {
+  const App = loadApp();
+  const html = App.views.curso(mkCtx(App, '#/curso/ihc', { openSections: { 'ihc-s2': true, 'ihc-s8': false } }));
+  assert.match(html, /data-section-id="ihc-s2"[^>]*aria-expanded="true"|aria-expanded="true"[^>]*data-section-id="ihc-s2"/);
+  assert.match(html, /data-section-id="ihc-s8"[^>]*aria-expanded="false"|aria-expanded="false"[^>]*data-section-id="ihc-s8"/);
+});
+
+test('curso: todos os cursos renderizam', () => {
+  const App = loadApp();
+  for (const c of App.data.courses) {
+    const html = App.views.curso(mkCtx(App, '#/curso/' + c.id));
+    assert.match(html, new RegExp(c.name));
+    assert.equal(count(html, /data-section-id=/g), c.sections.length, c.id);
+  }
+});
+
+test('curso concluído', () => {
+  const App = loadApp();
+  const html = App.views.curso(mkCtx(App, '#/curso/alg'));
+  assert.match(html, /Concluído/);
+  assert.match(html, /Média final/);
+  assert.match(html, /julho de 2026/);
+});
+
+test('plano de ensino e avisos', () => {
+  const App = loadApp();
+  const plano = App.views.curso(mkCtx(App, '#/curso/ihc/plano'));
+  for (const s of ['Ementa', 'Objetivos', 'Conteúdo programático', 'Metodologia', 'Avaliação', 'Bibliografia']) assert.match(plano, new RegExp(s));
+  assert.match(plano, /href="#\/curso\/ihc"/);
+  const avisos = App.views.curso(mkCtx(App, '#/curso/ihc/avisos'));
+  assert.equal(count(avisos, /class="notice"/g), 4);
+});
