@@ -651,6 +651,39 @@ ul.prose-list { list-style: disc; }
   .plan { padding: var(--s-4); }
 }
 
+/* ---------- Abas do curso ---------- */
+.filters { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: flex-end; padding: var(--s-4); margin-bottom: var(--s-4); }
+.filters .field { min-width: 180px; }
+.filters__search { flex: 1; min-width: 240px; }
+.results-status { color: var(--c-muted); font-size: var(--f-12); margin-bottom: var(--s-2); }
+.person__name { display: inline-flex; align-items: center; gap: var(--s-2); font-weight: 600; }
+.grades-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-4); }
+.grades-avg { text-align: right; }
+.grades-avg__value { font-size: var(--f-28); font-weight: 800; line-height: 1.1; color: var(--c-primary); }
+.grade-row__title { display: block; font-weight: 600; }
+.grade-row__sub { display: block; font-size: var(--f-12); color: var(--c-muted); }
+.grade-row__grade { font-weight: 700; }
+.table tfoot th, .table tfoot td { background: var(--c-surface-2); border-top: 1px solid var(--c-border); font-weight: 700; padding: var(--s-3) var(--s-4); text-align: left; }
+.table tfoot .num { text-align: right; }
+.act-group { padding: var(--s-4); }
+.act-group__title { margin-bottom: var(--s-2); }
+.act-group--atrasada .act-group__title .icon { color: var(--c-danger); }
+.act-group--entregue .act-group__title .icon { color: var(--c-success); }
+
+@media (max-width: 680px) {
+  .filters .field { min-width: 0; flex: 1 1 100%; }
+  .table--people thead, .table--grades thead { display: none; }
+  .table--people, .table--people tbody, .table--grades, .table--grades tbody, .table--grades tfoot { display: block; width: 100%; }
+  .table--grades tfoot tr { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .table--grades tfoot td:empty { display: none; }
+  .table--people tr, .table--grades tbody tr { display: grid; grid-template-columns: 1fr auto; gap: var(--s-1) var(--s-3); padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--c-border); }
+  .table--people td, .table--grades tbody td { padding: 0; border: 0; }
+  .table--people td:first-child, .table--grades tbody td:first-child { grid-column: 1 / -1; }
+  .table--grades tbody td:nth-child(2) { display: none; }
+  .table--grades tbody td:last-child { grid-column: 1 / -1; font-size: var(--f-12); }
+  .grades-avg { text-align: left; }
+}
+
 /* ---------- Responsivo (global) ---------- */
 @media (max-width: 980px) {
   .grid-2 { grid-template-columns: 1fr; }

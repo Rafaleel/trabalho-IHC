@@ -113,3 +113,32 @@ test('plano de ensino e avisos', () => {
   const avisos = App.views.curso(mkCtx(App, '#/curso/ihc/avisos'));
   assert.equal(count(avisos, /class="notice"/g), 4);
 });
+
+test('abas Participantes, Notas e Atividades', () => {
+  const App = loadApp();
+  const p = App.views.participantes(mkCtx(App, '#/curso/ihc/participantes'));
+  assert.match(p, /Profa\. Ana Ribeiro/);
+  assert.match(p, /Rafael da Silva Moral/);
+  assert.match(p, /href="#\/curso\/ihc\/participantes"[^>]*aria-current="page"/);
+  assert.equal(count(p, /<tr class="person"/g), 24);
+  const prof = App.views.participantes(mkCtx(App, '#/curso/ihc/participantes?papel=Professor(a)'));
+  assert.equal(count(prof, /<tr class="person"/g), 1);
+  const busca = App.views.participantes(mkCtx(App, '#/curso/ihc/participantes?q=rafael'));
+  assert.ok(count(busca, /<tr class="person"/g) >= 1);
+  assert.match(App.views.participantes(mkCtx(App, '#/curso/ihc/participantes?q=zzz')), /Nenhum participante/);
+
+  const n = App.views.notas(mkCtx(App, '#/curso/ihc/notas'));
+  assert.match(n, /Média parcial/);
+  assert.match(n, /—/);
+  assert.equal(count(n, /<tr class="grade-row/g), 17);
+  assert.match(App.views.notas(mkCtx(App, '#/curso/calc/notas')), /Média final/);
+
+  const a = App.views.atividades(mkCtx(App, '#/curso/bd/atividades'));
+  const iA = a.indexOf('Atrasadas'), iP = a.indexOf('Próximas'), iC = a.indexOf('Concluídas');
+  assert.ok(iA > 0 && iA < iP && iP < iC, 'grupos na ordem');
+  assert.match(App.views.atividades(mkCtx(App, '#/curso/ihc/atividades?situacao=zzz')), /Nenhuma atividade/);
+  const soTarefas = App.views.atividades(mkCtx(App, '#/curso/ihc/atividades?tipo=forum'));
+  assert.ok(!/Avaliação Cooperativa Planejamento/.test(soTarefas));
+  assert.match(soTarefas, /Discussão do Plano de Ensino/);
+  assert.equal(App.resolveView(mkCtx(App, '#/curso/ihc/notas')).title, 'Interação Humano-Computador');
+});
