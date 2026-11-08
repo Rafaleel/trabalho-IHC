@@ -76,7 +76,7 @@
         it('pptx', 'Modelo ER'),
         it('link', 'Ferramenta brModelo'),
       ], [['EaD (2h)', [graded('tarefa', 'Modelo ER do sistema de biblioteca', { opens: '2026-08-31T18:40', due: '2026-09-13T23:59', submitted: true, grade: 8, weight: 10, feedback: 'Cardinalidades de Empréstimo incorretas.' })]]]),
-      week('bd', 4, 'Modelo relacional e mapeamento ER → relacional.', [
+      week('bd', 4, 'Modelo relacional e mapeamento do ER para o relacional.', [
         it('pdf', 'Mapeamento ER para relacional'),
         graded('tarefa', 'Modelo relacional da biblioteca', { opens: '2026-09-14T18:40', due: '2026-09-20T23:59', submitted: true, grade: 9, weight: 10 }),
       ]),

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecionando… | Moodle Unipampa</title>
+  <script>
+    /* GitHub Pages serves this file for unknown paths. Send the visitor to the SPA,
+       turning the leftover path into a hash route (unknown routes show the app's own "not found" page). */
+    (function () {
+      var parts = location.pathname.split('/').filter(Boolean);
+      var isProjectPage = /\.github\.io$/.test(location.hostname) && parts.length > 0;
+      var base = isProjectPage ? '/' + parts.shift() + '/' : '/';
+      var rest = parts.join('/').replace(/\.html?$/, '');
+      location.replace(base + '#/' + rest + location.search);
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecionando para o <a href="./">Moodle Unipampa</a>…</p>
+</body>
+</html>
