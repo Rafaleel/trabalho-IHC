@@ -169,3 +169,38 @@ test('meus cursos: filtro', () => {
   assert.ok(ord.indexOf('/curso/ihc"') < ord.indexOf('/curso/web"'));
   assert.equal(App.resolveView(mkCtx(App, '#/cursos')).title, 'Meus cursos');
 });
+
+test('página inicial, painel e calendário', () => {
+  const App = loadApp();
+  const h = App.views.home(mkCtx(App, '#/'));
+  assert.match(h, /Olá, Rafael/);
+  assert.equal(count(h, /class="site-notice"/g), 3);
+  for (const c of ['ihc', 'web', 'bd', 'ia', 'pi']) assert.match(h, new RegExp(`href="#/curso/${c}"`));
+  assert.match(h, /href="#\/painel"/);
+
+  const p = App.views.painel(mkCtx(App, '#/painel'));
+  assert.match(p, /Linha do tempo/);
+  assert.match(p, /Avaliação Cooperativa Planejamento/);
+  assert.match(p, /Acessados recentemente/);
+  assert.match(p, /href="#\/calendario"/);
+  assert.match(p, /Hoje/);
+  const late = App.views.painel(mkCtx(App, '#/painel', { painelRange: 'atrasadas' }));
+  assert.match(late, /Lista 4 — subconsultas/);
+  assert.ok(!/Avaliação Cooperativa Planejamento<\/a>/.test(late.split('Acessados recentemente')[0]));
+  const p30 = App.views.painel(mkCtx(App, '#/painel', { painelRange: 30 }));
+  assert.match(p30, /Projeto final — relatório e código/);
+
+  const c = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11'));
+  assert.match(c, /novembro de 2026/);
+  assert.equal(count(c, /data-cal-day=/g), 42);
+  assert.match(App.views.calendario(mkCtx(App, '#/calendario?mes=2027-01')), /janeiro de 2027/);
+  assert.match(App.views.calendario(mkCtx(App, '#/calendario')), /novembro de 2026/);
+  assert.match(App.views.calendario(mkCtx(App, '#/calendario?mes=xx')), /novembro de 2026/);
+  const web = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11&curso=web'));
+  assert.match(web, /Sprint 3 — formulário de inscrição validado/);
+  assert.ok(!/Avaliação Cooperativa/.test(web));
+  const dia = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11&dia=2026-11-16'));
+  assert.match(dia, /segunda-feira, 16 de novembro/);
+  assert.match(dia, /Apresentação do grupo/);
+  for (const v of ['Página inicial', 'Painel', 'Calendário']) assert.ok(App.resolveView(mkCtx(App, { 'Página inicial': '#/', Painel: '#/painel', 'Calendário': '#/calendario' }[v])).title === v);
+});
