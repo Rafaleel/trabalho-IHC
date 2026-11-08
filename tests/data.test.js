@@ -75,3 +75,26 @@ test('sem dados reais de terceiros nem e-mails', () => {
     assert.ok(!/[\w.-]+@[\w-]+\.[\w.]+/.test(src), `e-mail em ${f}`);
   }
 });
+
+test('cursos e situações', () => {
+  const { data } = loadApp();
+  const ids = (st) => [...data.courses.filter((c) => c.status === st).map((c) => c.id)].sort();
+  assert.deepEqual(ids('andamento'), ['bd', 'ia', 'ihc', 'pi', 'web']);
+  assert.deepEqual(ids('concluido'), ['alg', 'calc']);
+  const today = data.today;
+  const all = data.courses.flatMap((c) => allItems(c).map((i) => ({ c, i })));
+  const late = all.filter(({ i }) => i.graded && !i.submitted && i.due && i.due < today);
+  assert.equal(late.length, 1, 'exatamente 1 atrasada');
+  assert.equal(late[0].c.id, 'bd');
+  for (const c of data.courses.filter((c) => c.status === 'andamento')) {
+    assert.ok(allItems(c).some((i) => i.graded && !i.submitted && i.due >= today && i.due <= '2026-11-22T23:59'), `${c.id} sem entrega próxima`);
+    assert.ok(c.sections.length >= 9, `${c.id} poucas seções`);
+    assert.ok(c.sections.filter((s) => (s.subsections || []).length).length >= 3, `${c.id} subseções EaD`);
+    assert.ok(c.sections.some((s) => s.highlight && s.start <= '2026-11-08' && s.end >= '2026-11-08'), `${c.id} semana atual`);
+    if (c.id !== 'ihc') assert.ok(!allItems(c).some((i) => i.due && i.due.startsWith('2026-11-08')), `${c.id} não pode vencer em 08/11`);
+  }
+  for (const c of data.courses.filter((c) => c.status === 'concluido')) {
+    assert.equal(c.term, '2026/1');
+    assert.ok(allItems(c).filter((i) => i.graded).every((i) => i.submitted && typeof i.grade === 'number'), c.id);
+  }
+});
