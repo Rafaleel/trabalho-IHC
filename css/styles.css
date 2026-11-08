@@ -648,7 +648,7 @@ ul.prose-list { list-style: disc; }
   .summary { grid-template-columns: 1fr; }
   .course-side { display: flex; }
   .item { flex-wrap: wrap; }
-  .item__aside { padding-top: 0; margin-left: var(--s-7); flex-basis: 100%; }
+  .item__aside { padding-top: 0; padding-left: var(--s-7); flex-basis: 100%; min-width: 0; }
   .section__count { display: none; }
   .plan { padding: var(--s-4); }
 }
