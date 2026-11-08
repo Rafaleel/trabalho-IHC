@@ -23,14 +23,31 @@
 
   /* ---------- Routing ---------- */
 
+  /* Decodes a URL component; malformed escapes (e.g. "100%") are kept as typed. */
+  function safeDecode(str) {
+    var raw = str.replace(/\+/g, ' ');
+    try { return decodeURIComponent(raw); } catch (e) { return raw; }
+  }
+
+  /* CSS selector that finds "the same" control after a full re-render, so focus can be restored. */
+  function focusSelector(id, dataset) {
+    if (id) return '#' + id;
+    var d = dataset || {};
+    if (!d.action) return null;
+    var map = { id: 'id', key: 'key', value: 'value', menu: 'menu', dir: 'dir', day: 'day', calDay: 'cal-day' };
+    return '[data-action="' + d.action + '"]' + Object.keys(map).map(function (k) {
+      return d[k] !== undefined ? '[data-' + map[k] + '="' + String(d[k]).replace(/"/g, '\\"') + '"]' : '';
+    }).join('');
+  }
+
   function parseQuery(qs) {
     var out = {};
     if (!qs) return out;
     qs.split('&').forEach(function (pair) {
       if (!pair) return;
       var i = pair.indexOf('=');
-      var k = decodeURIComponent((i < 0 ? pair : pair.slice(0, i)).replace(/\+/g, ' '));
-      var v = i < 0 ? '' : decodeURIComponent(pair.slice(i + 1).replace(/\+/g, ' '));
+      var k = safeDecode(i < 0 ? pair : pair.slice(0, i));
+      var v = i < 0 ? '' : safeDecode(pair.slice(i + 1));
       if (k) out[k] = v;
     });
     return out;
@@ -272,6 +289,7 @@
     pad: pad,
     norm: norm,
     parseQuery: parseQuery,
+    focusSelector: focusSelector,
     parseRoute: parseRoute,
     buildHash: buildHash,
     parseDate: parseDate,

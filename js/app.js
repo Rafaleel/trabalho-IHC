@@ -65,12 +65,7 @@
   /* Identifies an element so focus can be restored after a full re-render. */
   function focusKey(el) {
     if (!el || el === document.body) return null;
-    if (el.id) return '#' + el.id;
-    var d = el.dataset || {};
-    if (d.action) return '[data-action="' + d.action + '"]' + ['id', 'key', 'value', 'menu', 'dir', 'day'].map(function (k) {
-      return d[k] !== undefined ? '[data-' + k + '="' + d[k] + '"]' : '';
-    }).join('');
-    return null;
+    return L.focusSelector(el.id, el.dataset);
   }
 
   function render(opts) {
@@ -150,6 +145,7 @@
     var soon = e.target.closest('[data-soon]');
     if (soon) {
       e.preventDefault();
+      if (state.openMenu) { state.openMenu = null; render(); }
       App.ui.toast(App.ui.SOON);
       return;
     }

@@ -125,3 +125,17 @@ test('resumo, próximas e eventos', () => {
   assert.ok(ev.some((e) => e.date === '2026-11-09' && !e.itemId));
   assert.equal(logic.allItems(ihc).length, ev.filter((e) => e.itemId).length + logic.allItems(ihc).filter((x) => !x.item.due).length);
 });
+
+test('rotas com escape malformado não quebram', () => {
+  const { parseRoute } = L();
+  assert.equal(parseRoute('#/curso/ihc/notas?x=%E0').name, 'curso');
+  assert.equal(parseRoute('#/cursos?q=100%').query.q, '100%');
+});
+
+test('focusSelector identifica o elemento para restaurar o foco', () => {
+  const { focusSelector } = L();
+  assert.equal(focusSelector('course-q', {}), '#course-q');
+  assert.equal(focusSelector('', { action: 'cal-day', calDay: '2026-11-12' }), '[data-action="cal-day"][data-cal-day="2026-11-12"]');
+  assert.equal(focusSelector('', { action: 'set-filter', key: 'area', value: 'Dados' }), '[data-action="set-filter"][data-key="area"][data-value="Dados"]');
+  assert.equal(focusSelector('', {}), null);
+});
