@@ -567,7 +567,18 @@ main:focus { outline: none; }
 .subsection__empty { padding: var(--s-3) 0; color: var(--c-muted); font-size: var(--f-12); }
 
 /* Barra lateral do curso */
-.course-side { display: flex; flex-direction: column; gap: var(--s-4); position: sticky; top: calc(var(--topbar-h) + var(--s-4)); }
+.course-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--s-4));
+  max-height: calc(100vh - var(--topbar-h) - var(--s-6));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding-bottom: var(--s-1);
+}
 .side-card { padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3); }
 .side__subtitle { font-size: var(--f-12); font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; padding-top: var(--s-3); border-top: 1px solid var(--c-border); }
 .side__empty { color: var(--c-muted); font-size: var(--f-12); }
@@ -642,7 +653,7 @@ ul.prose-list { list-style: disc; }
 
 @media (max-width: 980px) {
   .course-layout { grid-template-columns: minmax(0, 1fr); }
-  .course-side { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .course-side { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; overflow: visible; }
 }
 @media (max-width: 680px) {
   .summary { grid-template-columns: 1fr; }
@@ -745,6 +756,15 @@ ul.prose-list { list-style: disc; }
 /* ---------- Painel ---------- */
 .dash-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--s-5); align-items: start; }
 .timeline__head { flex-wrap: wrap; }
+.timeline__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+.timeline__more { display: flex; justify-content: center; padding-top: var(--s-3); }
+.timeline--compact .timeline__group + .timeline__group { margin-top: var(--s-2); }
+.timeline--compact .timeline__day { padding-bottom: var(--s-1); }
+.timeline--compact .timeline__item { padding: var(--s-1) 0; gap: var(--s-2); }
+.timeline--compact .type-icon { display: none; }
+.timeline--compact .timeline__main { display: flex; align-items: baseline; gap: var(--s-3); }
+.timeline--compact .timeline__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.timeline--compact .timeline__meta { flex: none; }
 .timeline__group + .timeline__group { margin-top: var(--s-4); }
 .timeline__day { font-size: var(--f-12); font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.06em; padding-bottom: var(--s-2); border-bottom: 1px solid var(--c-border); }
 .timeline__item { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-3) 0; border-bottom: 1px solid var(--c-border); }
@@ -794,7 +814,7 @@ ul.prose-list { list-style: disc; }
 .cal__events { display: flex; flex-direction: column; gap: var(--s-1); min-width: 0; }
 .cal__pill { display: block; padding: 0 var(--s-1); border-left: 3px solid var(--course); background: var(--c-neutral-soft); border-radius: var(--r-sm); font-size: 11px; font-weight: 600; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--c-text); }
 .cal__more { font-size: 11px; color: var(--c-muted); font-weight: 600; }
-.cal__side { position: sticky; top: calc(var(--topbar-h) + var(--s-4)); }
+.cal__side { position: sticky; top: calc(var(--topbar-h) + var(--s-4)); max-height: calc(100vh - var(--topbar-h) - var(--s-6)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .agenda { display: flex; flex-direction: column; gap: var(--s-3); }
 .agenda__item { display: flex; align-items: flex-start; gap: var(--s-3); }
 .agenda__item > .dot { margin-top: var(--s-2); }
@@ -803,7 +823,7 @@ ul.prose-list { list-style: disc; }
 
 @media (max-width: 980px) {
   .home-grid, .dash-layout, .cal-layout { grid-template-columns: minmax(0, 1fr); }
-  .cal__side { position: static; }
+  .cal__side { position: static; max-height: none; overflow: visible; }
   .recent-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 680px) {

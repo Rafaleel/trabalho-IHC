@@ -187,7 +187,7 @@ test('página inicial, painel e calendário', () => {
   const late = App.views.painel(mkCtx(App, '#/painel', { painelRange: 'atrasadas' }));
   assert.match(late, /Lista 4 — subconsultas/);
   assert.ok(!/Avaliação Cooperativa Planejamento<\/a>/.test(late.split('Acessados recentemente')[0]));
-  const p30 = App.views.painel(mkCtx(App, '#/painel', { painelRange: 30 }));
+  const p30 = App.views.painel(mkCtx(App, '#/painel', { painelRange: 30, painelAll: true }));
   assert.match(p30, /Projeto final — relatório e código/);
 
   const c = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11'));
@@ -203,4 +203,43 @@ test('página inicial, painel e calendário', () => {
   assert.match(dia, /segunda-feira, 16 de novembro/);
   assert.match(dia, /Apresentação do grupo/);
   for (const v of ['Página inicial', 'Painel', 'Calendário']) assert.ok(App.resolveView(mkCtx(App, { 'Página inicial': '#/', Painel: '#/painel', 'Calendário': '#/calendario' }[v])).title === v);
+});
+
+test('painel: período Hoje, modo compacto e limite de itens', () => {
+  const App = loadApp();
+  const hoje = App.views.painel(mkCtx(App, '#/painel', { painelRange: 'hoje' }));
+  const tl = hoje.split('Acessados recentemente')[0];
+  assert.match(tl, /Avaliação Cooperativa Planejamento/);
+  assert.ok(!/Debate: ética em IA/.test(tl));
+  assert.match(hoje, /data-value="hoje"/);
+
+  const compact = App.views.painel(mkCtx(App, '#/painel', { painelCompact: true }));
+  assert.match(compact, /timeline--compact/);
+  assert.match(compact, /data-action="painel-compact"[^>]*aria-pressed="true"|aria-pressed="true"[^>]*data-action="painel-compact"/);
+
+  const p30 = App.views.painel(mkCtx(App, '#/painel', { painelRange: 30 }));
+  const total = App.logic.upcoming(App.data.courses, App.data.today, { days: 30 }).length;
+  assert.ok(total > 5);
+  assert.equal(count(p30.split('Acessados recentemente')[0], /class="timeline__item"/g), 5);
+  assert.match(p30, new RegExp(`Mostrar todas \\(${total}\\)`));
+  const all = App.views.painel(mkCtx(App, '#/painel', { painelRange: 30, painelAll: true }));
+  assert.equal(count(all.split('Acessados recentemente')[0], /class="timeline__item"/g), total);
+  assert.match(all, /Mostrar menos/);
+});
+
+test('calendário: "Neste mês" limitado com opção de ver todos', () => {
+  const App = loadApp();
+  const html = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11'));
+  const side = html.split('Neste mês')[1];
+  assert.equal(count(side, /class="agenda__item"/g), 6);
+  assert.match(side, /Mostrar todos os \d+ eventos/);
+  const all = App.views.calendario(mkCtx(App, '#/calendario?mes=2026-11', { calMonthAll: true })).split('Neste mês')[1];
+  assert.ok(count(all, /class="agenda__item"/g) > 6);
+  assert.match(all, /Mostrar menos/);
+});
+
+test('barra lateral do curso cabe na tela (rolagem própria)', () => {
+  const css = require('./helpers').read('css/styles.css');
+  assert.match(css, /\.course-side\s*\{[^}]*max-height:\s*calc\(100vh/);
+  assert.match(css, /\.course-side\s*\{[^}]*overflow-y:\s*auto/);
 });

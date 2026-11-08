@@ -5,6 +5,7 @@
   App.views = App.views || {};
   App.actions = App.actions || {};
 
+  var MONTH_LIMIT = 6;
   var WD = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
   function parse(ctx) {
@@ -35,7 +36,7 @@
     return '<li class="agenda__item" style="--course: ' + e.course.color + ';">' +
       (withDate ? '<span class="event-list__date">' + L.fmtDate(e.date, 'short') + '</span>' : '<span class="dot" aria-hidden="true"></span>') +
       '<span class="event-list__body"><a class="event-list__title" href="' + L.buildHash('curso', { id: e.course.id }) + '">' + ui.esc(e.title) + '</a>' +
-      '<span class="event-list__meta">' + ui.esc(e.course.name) + (e.time ? ' · ' + e.time : '') + '</span></span>' + (st ? ui.statusTag(st) : '') + '</li>';
+      '<span class="event-list__meta">' + ui.esc(withDate ? e.course.shortName : e.course.name) + (e.time ? ' · ' + e.time : '') + '</span></span>' + (st ? ui.statusTag(st) : '') + '</li>';
   }
 
   App.views.calendario = function (ctx) {
@@ -84,7 +85,12 @@
       (dayEvents.length ? '<ul class="agenda">' + dayEvents.map(function (e) { return agendaItem(e, ctx, false); }).join('') + '</ul>'
         : '<p class="side__empty">' + (p.day ? 'Nenhum evento neste dia.' : 'Selecione um dia no calendário para ver os eventos.') + '</p>') +
       '</section><section class="card side-card"><h2 class="card__title">' + ui.icon('list') + 'Neste mês</h2>' +
-      (monthEvents.length ? '<ul class="agenda">' + monthEvents.map(function (e) { return agendaItem(e, ctx, true); }).join('') + '</ul>' : '<p class="side__empty">Nenhum evento neste mês.</p>') +
+      (monthEvents.length ? '<ul class="agenda agenda--compact">' + (ctx.state.calMonthAll ? monthEvents : monthEvents.slice(0, MONTH_LIMIT)).map(function (e) { return agendaItem(e, ctx, true); }).join('') + '</ul>' +
+        (monthEvents.length > MONTH_LIMIT ? ui.btn({
+          label: ctx.state.calMonthAll ? 'Mostrar menos' : 'Mostrar todos os ' + monthEvents.length + ' eventos', icon: ctx.state.calMonthAll ? 'chevron-up' : 'chevron-down',
+          size: 'sm', variant: 'ghost', cls: 'btn--block', attrs: { 'data-action': 'cal-month-all', 'aria-expanded': ctx.state.calMonthAll ? 'true' : 'false' },
+        }) : '')
+        : '<p class="side__empty">Nenhum evento neste mês.</p>') +
       '</section></aside>';
 
     return ui.pageHead('Planejamento', 'Calendário', 'Entregas e eventos de todos os seus cursos. Clique em um dia para ver a agenda.') +
@@ -99,6 +105,7 @@
     var m = App.logic.addMonths(p.year, p.month0, dir);
     App.setQuery({ mes: m.year + '-' + App.logic.pad(m.month0 + 1), dia: '' });
   };
+  App.actions['cal-month-all'] = function () { App.state.calMonthAll = !App.state.calMonthAll; App.render(); };
   App.actions['cal-day'] = function (el) {
     var k = el.getAttribute('data-cal-day'), p = current();
     var patch = { dia: k };

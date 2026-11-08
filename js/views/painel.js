@@ -17,13 +17,25 @@
   function timeline(ctx) {
     var ui = App.ui, L = App.logic, D = App.data, esc = ui.esc;
     var range = ctx.state.painelRange;
-    var list = range === 'atrasadas' ? L.upcoming(D.courses, ctx.now, { lateOnly: true }) : L.upcoming(D.courses, ctx.now, { days: range });
+    var LIMIT = 5;
+    var todayKey = ctx.now.slice(0, 10);
+    var list = range === 'atrasadas' ? L.upcoming(D.courses, ctx.now, { lateOnly: true })
+      : range === 'hoje' ? L.upcoming(D.courses, ctx.now, { days: 1 }).filter(function (u) { return u.item.due.slice(0, 10) === todayKey; })
+        : L.upcoming(D.courses, ctx.now, { days: range });
+    var total = list.length;
+    var showAll = ctx.state.painelAll;
+    if (!showAll) list = list.slice(0, LIMIT);
+    var compact = !!ctx.state.painelCompact;
     var seg = ui.segmented('Período', 'painel-range', 'range', [
-      { value: 7, label: 'Próximos 7 dias' }, { value: 30, label: 'Próximos 30 dias' }, { value: 'atrasadas', label: 'Atrasadas' },
+      { value: 'hoje', label: 'Hoje' }, { value: 7, label: '7 dias' }, { value: 30, label: '30 dias' }, { value: 'atrasadas', label: 'Atrasadas' },
     ], range);
+    var compactBtn = ui.btn({
+      label: 'Compacta', icon: 'list', size: 'sm', variant: compact ? 'primary' : 'secondary',
+      attrs: { 'data-action': 'painel-compact', 'aria-pressed': compact ? 'true' : 'false', title: 'Mostrar cada atividade em uma linha' },
+    });
     var body;
     if (!list.length) {
-      body = ui.emptyState(range === 'atrasadas' ? 'Nenhuma atividade atrasada' : 'Nada para entregar neste período', range === 'atrasadas' ? 'Você está em dia com todas as entregas.' : 'Experimente ampliar o período para 30 dias.');
+      body = ui.emptyState(range === 'atrasadas' ? 'Nenhuma atividade atrasada' : 'Nada para entregar neste período', range === 'atrasadas' ? 'Você está em dia com todas as entregas.' : 'Experimente ampliar o período.');
     } else {
       var groups = [];
       list.forEach(function (u) {
@@ -41,8 +53,15 @@
               ui.statusTag(u.status) + '</li>';
           }).join('') + '</ul></div>';
       }).join('');
+      if (total > LIMIT) {
+        body += '<div class="timeline__more">' + ui.btn({
+          label: showAll ? 'Mostrar menos' : 'Mostrar todas (' + total + ')', icon: showAll ? 'chevron-up' : 'chevron-down', size: 'sm', variant: 'ghost',
+          attrs: { 'data-action': 'painel-all', 'aria-expanded': showAll ? 'true' : 'false' },
+        }) + '</div>';
+      }
     }
-    return '<section class="card timeline"><div class="card__head timeline__head"><h2 class="card__title">' + ui.icon('clock') + 'Linha do tempo</h2>' + seg + '</div><div class="card__body">' + body + '</div></section>';
+    return '<section class="card timeline' + (compact ? ' timeline--compact' : '') + '"><div class="card__head timeline__head"><h2 class="card__title">' + ui.icon('clock') + 'Linha do tempo</h2>' +
+      '<div class="timeline__controls">' + seg + compactBtn + '</div></div><div class="card__body">' + body + '</div></section>';
   }
 
   function recent(ctx) {
@@ -85,9 +104,12 @@
 
   App.actions['painel-range'] = function (el) {
     var v = el.getAttribute('data-value');
-    App.state.painelRange = v === 'atrasadas' ? v : +v;
+    App.state.painelRange = v === 'atrasadas' || v === 'hoje' ? v : +v;
+    App.state.painelAll = false;
     App.render();
   };
+  App.actions['painel-compact'] = function () { App.state.painelCompact = !App.state.painelCompact; App.render(); };
+  App.actions['painel-all'] = function () { App.state.painelAll = !App.state.painelAll; App.render(); };
   App.actions['side-month-global'] = function (el) {
     var id = el.getAttribute('data-id');
     var now = App.data.today;

@@ -68,6 +68,9 @@ function defaultState(App) {
     sideDay: {},
     calCourses: [],
     painelRange: 7,
+    painelCompact: false,
+    painelAll: false,
+    calMonthAll: false,
     view: 'cards',
     openMenu: null,
   };
