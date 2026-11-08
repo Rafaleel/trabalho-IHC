@@ -142,3 +142,30 @@ test('abas Participantes, Notas e Atividades', () => {
   assert.match(soTarefas, /Discussão do Plano de Ensino/);
   assert.equal(App.resolveView(mkCtx(App, '#/curso/ihc/notas')).title, 'Interação Humano-Computador');
 });
+
+test('meus cursos: filtro', () => {
+  const App = loadApp();
+  const html = App.views.cursos(mkCtx(App, '#/cursos'));
+  assert.equal(count(html, /class="course-card[ "]/g), 5);
+  assert.match(html, /aria-pressed="true"[^>]*aria-label="Remover .* dos favoritos"|aria-label="Remover .* dos favoritos"[^>]*aria-pressed="true"/);
+  assert.match(html, /id="course-results"/);
+  assert.match(html, /data-input="course-search"/);
+  assert.match(html, /<strong>5<\/strong> cursos/);
+  assert.ok(!/filtros? ativos?/.test(html.match(/<div id="course-results"[\s\S]*/)[0].slice(0, 400)), 'sem contador quando não há filtro');
+  for (const c of ['ihc', 'web', 'bd', 'ia', 'pi']) assert.match(html, new RegExp(`href="#/curso/${c}"`));
+
+  const r = App.views.cursosResults(mkCtx(App, '#/cursos?q=zzz&fav=1'));
+  assert.match(r, /Nenhum curso encontrado/);
+  assert.match(r, /2 filtros ativos/);
+  assert.match(r, /data-action="clear-filters"/);
+  assert.match(App.views.cursosResults(mkCtx(App, '#/cursos?status=concluido')), /Algoritmos e Programação/);
+  assert.match(App.views.cursosResults(mkCtx(App, '#/cursos?status=concluido')), /Concluído/);
+  const lista = App.views.cursos(mkCtx(App, '#/cursos', { view: 'lista' }));
+  assert.match(lista, /course-grid--list/);
+  // área e ordenação vêm da URL
+  const area = App.views.cursosResults(mkCtx(App, '#/cursos?area=Dados'));
+  assert.equal(count(area, /class="course-card[ "]/g), 1);
+  const ord = App.views.cursosResults(mkCtx(App, '#/cursos?ordem=entrega'));
+  assert.ok(ord.indexOf('/curso/ihc"') < ord.indexOf('/curso/web"'));
+  assert.equal(App.resolveView(mkCtx(App, '#/cursos')).title, 'Meus cursos');
+});
